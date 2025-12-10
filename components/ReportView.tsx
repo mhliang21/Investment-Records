@@ -95,10 +95,9 @@ const ReportView: React.FC<ReportViewProps> = ({ date, positions }) => {
 
   const { monthStr, yearStr } = formatDate(date);
 
-  // Format number to Wan (10k)
-  const toWan = (num: number) => {
-    if (Math.abs(num) < 10000 && Math.abs(num) > 0) return (num / 10000).toFixed(4) + '万';
-    return (num / 10000).toFixed(1) + '万';
+  // Format number to Yuan (Standard Locale String)
+  const formatMoney = (num: number) => {
+    return Math.round(num).toLocaleString();
   };
   
   const formatPct = (val: number) => {
@@ -158,28 +157,28 @@ const ReportView: React.FC<ReportViewProps> = ({ date, positions }) => {
              {/* Main KPI Card */}
              <div className="bg-white/95 backdrop-blur-sm text-gray-800 rounded-2xl px-6 py-5 shadow-xl grid grid-cols-2 gap-y-4 gap-x-8 text-center border border-white/50">
                 <div className="border-r border-piggy-100">
-                    <div className="text-[10px] text-gray-400 mb-0.5 tracking-wide">总金额(元)</div>
-                    <div className="text-xl font-bold font-mono text-gray-800">{Math.round(totalAmount).toLocaleString()}</div>
+                    <div className="text-xs text-gray-400 mb-0.5 tracking-wide">总金额(元)</div>
+                    <div className="text-3xl font-bold font-mono text-gray-800">{formatMoney(totalAmount)}</div>
                 </div>
                 <div>
-                    <div className="text-[10px] text-gray-400 mb-0.5 tracking-wide">本月收益(元)</div>
-                    <div className={`text-xl font-bold font-mono ${totalMonthlyGain >= 0 ? 'text-piggy-500' : 'text-green-500'}`}>
-                        {totalMonthlyGain > 0 ? '+' : ''}{Math.round(totalMonthlyGain).toLocaleString()}
+                    <div className="text-xs text-gray-400 mb-0.5 tracking-wide">本月收益(元)</div>
+                    <div className={`text-2xl font-bold font-mono ${totalMonthlyGain >= 0 ? 'text-piggy-500' : 'text-green-500'}`}>
+                        {totalMonthlyGain > 0 ? '+' : ''}{formatMoney(totalMonthlyGain)}
                     </div>
                 </div>
                 <div className="border-r border-piggy-100 border-t pt-3">
-                    <div className="text-[10px] text-gray-400 mb-0.5 tracking-wide">本月收益率</div>
-                    <div className={`text-lg font-bold font-mono ${monthlyYield >= 0 ? 'text-piggy-500' : 'text-green-500'}`}>
+                    <div className="text-xs text-gray-400 mb-0.5 tracking-wide">本月收益率</div>
+                    <div className={`text-xl font-bold font-mono ${monthlyYield >= 0 ? 'text-piggy-500' : 'text-green-500'}`}>
                         {formatPct(monthlyYield)}
                     </div>
                 </div>
                 <div className="border-t border-piggy-100 pt-3">
-                    <div className="text-[10px] text-gray-400 mb-0.5 tracking-wide">累积收益及收益率</div>
+                    <div className="text-xs text-gray-400 mb-0.5 tracking-wide">累积收益及收益率</div>
                     <div className="flex flex-col items-center leading-none gap-1">
-                        <span className={`text-sm font-bold font-mono ${totalCumulativeGain >= 0 ? 'text-piggy-500' : 'text-green-500'}`}>
-                            {totalCumulativeGain > 0 ? '+' : ''}{toWan(totalCumulativeGain)}
+                        <span className={`text-lg font-bold font-mono ${totalCumulativeGain >= 0 ? 'text-piggy-500' : 'text-green-500'}`}>
+                            {totalCumulativeGain > 0 ? '+' : ''}{formatMoney(totalCumulativeGain)}
                         </span>
-                        <span className={`text-[10px] font-mono scale-90 opacity-80 ${totalYield >= 0 ? 'text-piggy-500' : 'text-green-500'}`}>
+                        <span className={`text-sm font-mono scale-90 opacity-80 ${totalYield >= 0 ? 'text-piggy-500' : 'text-green-500'}`}>
                             {formatPct(totalYield)}
                         </span>
                     </div>
@@ -235,7 +234,7 @@ const ReportView: React.FC<ReportViewProps> = ({ date, positions }) => {
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                  <div className="text-center">
                     <span className="text-[10px] text-gray-400 block">Total</span>
-                    <span className="text-xs font-bold text-gray-600">{toWan(totalAmount)}</span>
+                    <span className="text-sm font-bold text-gray-600">{formatMoney(totalAmount)}</span>
                  </div>
               </div>
             </div>
@@ -254,9 +253,9 @@ const ReportView: React.FC<ReportViewProps> = ({ date, positions }) => {
                   
                   return (
                       <div key={key} className="flex flex-col gap-1">
-                          <div className="flex justify-between text-[10px] text-gray-500 mb-0.5">
+                          <div className="flex justify-between text-xs text-gray-500 mb-0.5">
                               <span>{label}</span>
-                              <span className="font-mono">{toWan(stat.amount)}</span>
+                              <span className="font-mono">{formatMoney(stat.amount)}</span>
                           </div>
                           {/* Floating Gradient Bar without track background */}
                           <div className="h-2.5 rounded-full relative">
@@ -286,7 +285,7 @@ const ReportView: React.FC<ReportViewProps> = ({ date, positions }) => {
 
             <div className="space-y-6">
                  {/* Explicit Header Row */}
-                 <div className="grid grid-cols-12 text-[10px] text-gray-400 border-b border-gray-200 pb-2 px-2 uppercase tracking-wide">
+                 <div className="grid grid-cols-12 text-xs text-gray-400 border-b border-gray-200 pb-2 px-2 uppercase tracking-wide font-medium">
                     <div className="col-span-4">产品名称</div>
                     <div className="col-span-2 text-right">持有金额</div>
                     <div className="col-span-2 text-right">本月收益</div>
@@ -303,7 +302,7 @@ const ReportView: React.FC<ReportViewProps> = ({ date, positions }) => {
                             <div className="flex items-center gap-2 mb-2 mt-4 pl-1">
                                 {/* Small colored dot indicator */}
                                 <div className="w-2 h-2 rounded-full" style={{background: CATEGORY_GRADIENTS[cat].end}}></div>
-                                <span className="text-gray-800 font-bold text-xs tracking-wide">{CATEGORY_LABELS[cat]}</span>
+                                <span className="text-gray-800 font-bold text-sm tracking-wide">{CATEGORY_LABELS[cat]}</span>
                             </div>
                             
                             <div className="bg-white border border-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
@@ -317,32 +316,32 @@ const ReportView: React.FC<ReportViewProps> = ({ date, positions }) => {
                                             return (
                                                 <tr key={item.id} className={`${!isLast ? 'border-b border-gray-50' : ''} hover:bg-piggy-50/30 transition-colors`}>
                                                     {/* Product Name */}
-                                                    <td className="py-3 pl-3 pr-1 text-gray-700 text-xs font-medium w-[33%]">
+                                                    <td className="py-3 pl-3 pr-1 text-gray-700 text-sm font-medium w-[33%]">
                                                         {item.name}
                                                     </td>
                                                     
                                                     {/* Amount */}
-                                                    <td className="py-3 px-1 text-right font-mono text-xs text-gray-500 w-[16%]">
-                                                        {toWan(item.amount).replace('万','')}
+                                                    <td className="py-3 px-1 text-right font-mono text-sm text-gray-500 w-[16%]">
+                                                        {formatMoney(item.amount)}
                                                     </td>
 
                                                     {/* Monthly Gain */}
-                                                    <td className={`py-3 px-1 text-right font-mono text-xs w-[16%] ${item.monthlyGain >= 0 ? 'text-piggy-500' : 'text-green-600'}`}>
-                                                        {item.monthlyGain > 0 ? '+' : ''}{item.monthlyGain === 0 ? '-' : Math.round(item.monthlyGain)}
+                                                    <td className={`py-3 px-1 text-right font-mono text-sm w-[16%] ${item.monthlyGain >= 0 ? 'text-piggy-500' : 'text-green-600'}`}>
+                                                        {item.monthlyGain > 0 ? '+' : ''}{item.monthlyGain === 0 ? '-' : formatMoney(item.monthlyGain)}
                                                     </td>
 
                                                     {/* Monthly Yield */}
-                                                    <td className={`py-3 px-1 text-right font-mono text-[10px] w-[16%] ${itemMonthlyYield >= 0 ? 'text-piggy-500' : 'text-green-600'}`}>
+                                                    <td className={`py-3 px-1 text-right font-mono text-xs w-[16%] ${itemMonthlyYield >= 0 ? 'text-piggy-500' : 'text-green-600'}`}>
                                                         {formatPct(itemMonthlyYield)}
                                                     </td>
 
                                                     {/* Cumulative Gain/Yield */}
                                                     <td className="py-3 px-1 text-center w-[19%]">
                                                          <div className="flex flex-col items-center leading-none">
-                                                             <span className={`text-[10px] font-mono font-bold ${item.totalGain >= 0 ? 'text-piggy-500' : 'text-green-600'}`}>
-                                                                 {item.totalGain > 0 ? '+' : ''}{toWan(item.totalGain)}
+                                                             <span className={`text-sm font-mono font-bold ${item.totalGain >= 0 ? 'text-piggy-500' : 'text-green-600'}`}>
+                                                                 {item.totalGain > 0 ? '+' : ''}{formatMoney(item.totalGain)}
                                                              </span>
-                                                             <span className={`text-[9px] font-mono opacity-75 scale-90 mt-0.5 ${itemTotalYield >= 0 ? 'text-piggy-500' : 'text-green-600'}`}>
+                                                             <span className={`text-xs font-mono opacity-75 scale-90 mt-1 ${itemTotalYield >= 0 ? 'text-piggy-500' : 'text-green-600'}`}>
                                                                  {formatPct(itemTotalYield)}
                                                              </span>
                                                          </div>
