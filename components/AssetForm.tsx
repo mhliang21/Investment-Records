@@ -12,7 +12,7 @@ interface AssetFormProps {
 
 const AssetForm: React.FC<AssetFormProps> = ({ positions, onUpdate, date, onDateChange }) => {
   const [newPosition, setNewPosition] = useState<Partial<AssetPosition>>({
-    category: 'AH_Stock',
+    category: 'AH_Fund',
     amount: 0,
     monthlyGain: 0,
     totalGain: 0,
@@ -33,7 +33,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ positions, onUpdate, date, onDate
 
     onUpdate([...positions, item]);
     setNewPosition({
-      category: 'AH_Stock',
+      category: 'AH_Fund',
       amount: 0,
       monthlyGain: 0,
       totalGain: 0,
